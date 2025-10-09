@@ -123,10 +123,7 @@ def main():
 
     # ======== MESSAGE LOREM ========
     st.write(
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
-        "Vivamus feugiat, elit vel malesuada dictum, ligula justo convallis juste, "
-        "nec tincidunt est lorem vitae justo. Integer tempor feugiat metus, "
-        "a convallis lorem consequat vel."
+        "Une application modulaire qui transforme tout fichier CSV en graphique interactif, quel que soit le domaine. Elle s’adapte aux secteurs de l’économie, de la finance, de l’éducation, de la santé, de l’agriculture, de l’environnement, ou encore de la logistique. Grâce à sa compatibilité universelle avec tous les formats CSV, tous les secteurs d’activité et toutes les plateformes, elle s’intègre sans friction dans n’importe quel environnement professionnel. Son interface intuitive, son branding affirmé et sa structure optimisée en font un outil puissant pour les utilisateurs  exigeants. "
     )
 
     # ======== MODULE EXPORT (AFFICHAGE CONDITIONNEL) ========
