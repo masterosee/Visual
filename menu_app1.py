@@ -33,63 +33,12 @@ if user_row.empty or not user_row.iloc[0]['is_approved']:
 def main():
     st.set_page_config(page_title="Visualisation Universelle", layout="wide")
     
-    # ======== STYLE CSS COMPLET AVEC BACKGROUND ========
+    # ======== STYLE CSS UNIFIÉ POUR LE BOUTON EXPORT ========
     st.markdown("""
     <style>
-    /* Background principal de l'application */
-    .main {
-        background-color: #f8f9fa;
-        background-image: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    }
-    
-    /* Style pour le contenu principal */
-    .block-container {
-        background-color: white;
-        border-radius: 10px;
-        padding: 2rem;
-        margin-top: 1rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        border: 1px solid #e0e0e0;
-    }
-    
-    /* Style pour le sidebar */
-    section[data-testid="stSidebar"] {
-        background-color: #f8f9fa;
-        background-image: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
-    }
-    
-    /* Style des headers */
-    .css-10trblm {
-        color: #2c3e50;
-    }
-    
-    /* Style des radio buttons */
-    .stRadio > div {
-        background-color: white;
-        padding: 10px;
-        border-radius: 8px;
-        border: 1px solid #e0e0e0;
-    }
-    
-    /* Style des onglets */
-    .stTabs [data-baseweb="tab-list"] {
-        background-color: #f8f9fa;
-        gap: 2px;
-    }
-    
-    .stTabs [data-baseweb="tab"] {
-        background-color: #e9ecef;
-        border-radius: 4px 4px 0px 0px;
-        padding: 10px 20px;
-    }
-    
-    .stTabs [aria-selected="true"] {
-        background-color: white;
-    }
-    
     /* Style spécifique pour le bouton Export */
     div.stButton > button:first-child {
-        background-color: #FFD700 !important;
+        background-color: #FFD700 !important;   /* Or */
         color: black !important;
         border-radius: 8px !important;
         border: none !important;
@@ -100,50 +49,10 @@ def main():
     }
     
     div.stButton > button:first-child:hover {
-        background-color: #90EE90 !important;
+        background-color: #90EE90 !important;   /* Vert clair */
         color: black !important;
         transform: translateY(-2px) !important;
         box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
-    }
-    
-    /* Style des file uploaders */
-    .stFileUploader > div {
-        background-color: white;
-        border: 2px dashed #dee2e6;
-        border-radius: 8px;
-        padding: 20px;
-    }
-    
-    /* Style des dataframes */
-    .stDataFrame {
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-    }
-    
-    /* Amélioration de la lisibilité du texte */
-    .css-18e3th9 {
-        color: #000000;
-    }
-    
-    /* Style pour les messages d'info */
-    .stInfo {
-        background-color: #e8f4fd;
-        border: 1px solid #bee5eb;
-        border-radius: 8px;
-    }
-    
-    /* Style pour les messages de succès */
-    .stSuccess {
-        background-color: #d4edda;
-        border: 1px solid #c3e6cb;
-        border-radius: 8px;
-    }
-    
-    /* Style pour les messages d'erreur */
-    .stError {
-        background-color: #f8d7da;
-        border: 1px solid #f5c6cb;
-        border-radius: 8px;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -207,7 +116,7 @@ def main():
                   <path d="M 300 120 C 340 70, 390 60, 440 40" fill="none" stroke="url(#goldStroke)" stroke-width="3" stroke-linecap="round" filter="url(#glow)"/>
                 </svg>
             </div>
-            <div style="margin-left:15px; font-size:32px; font-weight:bold; color: #2c3e50;">Visualisation Universelle</div>
+            <div style="margin-left:15px; font-size:32px; font-weight:bold;">Visualisation Universelle</div>
         </div>
         """, unsafe_allow_html=True)
 
