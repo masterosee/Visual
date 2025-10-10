@@ -41,9 +41,13 @@ if user_row.empty or not user_row.iloc[0]['is_approved']:
 
 
 def main():
-    st.set_page_config(page_title="Visualisation Universelle", layout="wide")
+    st.set_page_config(
+        page_title="Visualisation Universelle", 
+        layout="centered",  # ✅ Optimisé pour mobile
+        initial_sidebar_state="auto"
+    )
     
-    # ======== STYLE CSS COMPLET AVEC BACKGROUND ========
+    # ======== STYLE CSS COMPLET AVEC SUPPORT MOBILE ========
     st.markdown("""
     <style>
     /* Background principal de l'application */
@@ -155,6 +159,74 @@ def main():
         border: 1px solid #f5c6cb;
         border-radius: 8px;
     }
+    
+    /* ======== STYLES MOBILE ======== */
+    @media (max-width: 768px) {
+        /* Adapter le contenu principal */
+        .main .block-container {
+            padding: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        /* Agrandir les boutons */
+        div.stButton > button {
+            width: 100% !important;
+            padding: 12px !important;
+            font-size: 16px !important;
+        }
+        
+        /* Adapter les file uploaders */
+        .stFileUploader > div {
+            padding: 15px;
+        }
+        
+        /* Adapter les colonnes */
+        .row-widget.stColumns {
+            flex-direction: column;
+        }
+        
+        /* Réduire la taille du logo */
+        svg {
+            width: 100px !important;
+            height: auto !important;
+        }
+        
+        /* Adapter la taille du titre */
+        .css-10trblm {
+            font-size: 24px !important;
+        }
+        
+        /* Agrandir les radios et selects */
+        .stRadio > div {
+            padding: 8px;
+        }
+        
+        .stSelectbox > div > div {
+            padding: 10px;
+        }
+        
+        /* Simplifier le header */
+        .css-1v0mbdj {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+    
+    /* Pour les très petits écrans */
+    @media (max-width: 480px) {
+        .main .block-container {
+            padding: 0.5rem;
+        }
+        
+        .css-10trblm {
+            font-size: 20px !important;
+        }
+        
+        /* Réduire encore le logo */
+        svg {
+            width: 80px !important;
+        }
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -167,9 +239,9 @@ def main():
     with col1:
         # Affichage du logo SVG + titre
         st.markdown("""
-        <div style="display:flex; align-items:center;">
+        <div style="display:flex; align-items:center; justify-content:center;">
             <div>
-                <svg xmlns="http://www.w3.org/2000/svg" width="150" height="78" viewBox="0 0 500 260">
+                <svg xmlns="http://www.w3.org/2000/svg" width="120" height="62" viewBox="0 0 500 260">
                   <defs>
                     <linearGradient id="goldStroke" x1="0%" y1="0%" x2="100%" y2="100%">
                       <stop offset="0%" stop-color="#FFD700"/>
@@ -217,12 +289,12 @@ def main():
                   <path d="M 300 120 C 340 70, 390 60, 440 40" fill="none" stroke="url(#goldStroke)" stroke-width="3" stroke-linecap="round" filter="url(#glow)"/>
                 </svg>
             </div>
-            <div style="margin-left:15px; font-size:32px; font-weight:bold; color: #2c3e50;">Visualisation Universelle</div>
+            <div style="margin-left:15px; font-size:28px; font-weight:bold; color: #2c3e50;">Visualisation Universelle</div>
         </div>
         """, unsafe_allow_html=True)
 
     with col2:
-        # Bouton Export CORRIGÉ
+        # Bouton Export
         clicked = st.button("💾 Export", key="toggle_export")
 
     if clicked:
@@ -230,7 +302,7 @@ def main():
 
     # ======== MESSAGE LOREM ========
     st.write(
-        "Une application modulaire qui transforme tout fichier CSV en graphique interactif, quel que soit le domaine. Elle s'adapte aux secteurs de l'économie, de la finance, de l'éducation, de la santé, de l'agriculture, de l'environnement, ou encore de la logistique. Grâce à sa compatibilité universelle avec tous les formats CSV, tous les secteurs d'activité et toutes les plateformes, elle s'intègre sans friction dans n'importe quel environnement professionnel. Son interface intuitive, son branding affirmé et sa structure optimisée en font un outil puissant pour les utilisateurs exigeants. "
+        "Une application modulaire qui transforme tout fichier CSV en graphique interactif, quel que soit le domaine. Elle s'adapte aux secteurs de l'économie, de la finance, de l'éducation, de la santé, de l'agriculture, de l'environnement, ou encore de la logistique."
     )
 
     # ======== MODULE EXPORT (AFFICHAGE CONDITIONNEL) ========
@@ -426,7 +498,6 @@ def main():
                         title="Carte thématique par pays"
                     )
                     st.plotly_chart(fig, use_container_width=True)
-                    # Plotly gère mieux la mémoire, pas besoin de close
                 else:
                     st.warning("Le dataset doit contenir les colonnes 'Country' et 'Value'.")
             else:
