@@ -1,3 +1,4 @@
+
 # menu_app.py
 import streamlit as st
 import pandas as pd
@@ -6,7 +7,7 @@ matplotlib.use('Agg')  # 🔥 CRITIQUE - évite les conflits de threads
 import matplotlib.pyplot as plt
 import plotly.express as px
 from utils import cleaning
-from modules.plots.time_series import plot_time_series, plot_time_series_multi
+from modules.plots.time_series import run_simple, run_multiple
 
 # ✅ VÉRIFICATION SIMPLIFIÉE
 if 'user' not in st.session_state:
@@ -38,7 +39,6 @@ user_row = users[users['username'].str.lower() == st.session_state['user'].lower
 if user_row.empty or not user_row.iloc[0]['is_approved']:
     st.warning("⛔ Votre compte n'est pas encore approuvé.")
     st.stop()
-
 
 def main():
     st.set_page_config(page_title="Visualisation Universelle", layout="wide")
@@ -154,6 +154,29 @@ def main():
         background-color: #f8d7da;
         border: 1px solid #f5c6cb;
         border-radius: 8px;
+    }
+    
+    /* Style pour le bouton PDF */
+    .download-btn-pdf {
+        background: #FFD700 !important;
+        color: black !important;
+        padding: 15px 30px !important;
+        text-decoration: none !important;
+        border-radius: 8px !important;
+        font-weight: bold !important;
+        display: inline-block !important;
+        border: 2px solid #FFD700 !important;
+        font-size: 16px !important;
+        transition: all 0.3s ease !important;
+        margin: 10px 0 !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+    }
+    .download-btn-pdf:hover {
+        background: #90EE90 !important;
+        color: black !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+        border-color: #90EE90 !important;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -273,173 +296,564 @@ def main():
 
     # === Nettoyage ===
     elif choix == "Nettoyage des données":
-        st.subheader("🧹 Module de nettoyage")
+        st.subheader("🧹 Module de Nettoyage Avancé")
+        
         fichier = st.file_uploader("Importer un fichier CSV", type=["csv"], key="clean")
         if fichier:
             try:
+                # Chargement avec gestion d'erreurs
                 df = load_csv(fichier)
-                df_clean = cleaning.prepare_dataset(df, missing_strategy="mean")
-                st.success("Nettoyage terminé ✅")
-                st.write("Aperçu des données nettoyées :")
-                st.dataframe(df_clean.head())
+                st.success(f"✅ Fichier chargé : {df.shape[0]} lignes × {df.shape[1]} colonnes")
+                
+                # Aperçu initial
+                st.subheader("📋 Aperçu des données initiales")
+                st.dataframe(df.head())
+                
+                # Options de nettoyage
+                st.subheader("⚙️ Options de Nettoyage")
+                
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    missing_strategy = st.selectbox(
+                        "Stratégie pour valeurs manquantes (numériques):",
+                        ["mean", "median", "zero", "drop"],
+                        help="Comment gérer les valeurs manquantes dans les colonnes numériques"
+                    )
+                    
+                    remove_duplicates = st.checkbox("Supprimer les doublons", value=True)
+                    convert_types = st.checkbox("Convertir les types automatiquement", value=True)
+                
+                with col2:
+                    remove_outliers = st.checkbox("Supprimer les valeurs aberrantes", value=False)
+                    if remove_outliers:
+                        outlier_threshold = st.slider(
+                            "Seuil pour valeurs aberrantes (IQR):",
+                            min_value=1.0,
+                            max_value=3.0,
+                            value=1.5,
+                            step=0.1,
+                            help="Plus le seuil est élevé, moins de valeurs seront considérées comme aberrantes"
+                        )
+                    else:
+                        outlier_threshold = 1.5
+                
+                # Bouton de nettoyage
+                if st.button("🚀 Lancer le Nettoyage Complet", type="primary"):
+                    with st.spinner("Nettoyage en cours..."):
+                        try:
+                            df_clean = cleaning.prepare_dataset(
+                                df,
+                                missing_strategy=missing_strategy,
+                                remove_duplicates_flag=remove_duplicates,
+                                convert_types_flag=convert_types,
+                                remove_outliers_flag=remove_outliers,
+                                outlier_threshold=outlier_threshold
+                            )
+                            
+                            # Résultats
+                            st.subheader("🎉 Résultats du Nettoyage")
+                            st.success("Nettoyage terminé avec succès !")
+                            
+                            # Aperçu des données nettoyées
+                            st.subheader("📊 Aperçu des données nettoyées")
+                            st.dataframe(df_clean.head())
+                            
+                            # Statistiques finales
+                            st.subheader("📈 Statistiques finales")
+                            col1, col2, col3 = st.columns(3)
+                            
+                            with col1:
+                                st.metric("Lignes", df_clean.shape[0], 
+                                    delta=df_clean.shape[0] - df.shape[0])
+                            with col2:
+                                st.metric("Colonnes", df_clean.shape[1])
+                            with col3:
+                                completeness = (1 - df_clean.isnull().sum().sum() / (df_clean.shape[0] * df_clean.shape[1])) * 100
+                                st.metric("Complétude", f"{completeness:.1f}%")
+                            
+                            # Téléchargement
+                            st.subheader("💾 Téléchargement")
+                            csv = df_clean.to_csv(index=False)
+                            st.download_button(
+                                label="⬇️ Télécharger les données nettoyées (CSV)",
+                                data=csv,
+                                file_name="donnees_nettoyees.csv",
+                                mime="text/csv",
+                            )
+                            
+                        except Exception as e:
+                            st.error(f"❌ Erreur lors du nettoyage : {str(e)}")
+                            st.info("💡 Essayez de modifier les options de nettoyage ou vérifiez votre fichier")
+            
             except Exception as e:
-                st.error(f"Erreur lors du nettoyage : {e}")
+                st.error(f"❌ Erreur lors du chargement du fichier : {str(e)}")
+                st.info("💡 Vérifiez que votre fichier CSV est valide et bien formaté")
+        else:
+            st.info("📁 Veuillez importer un fichier CSV pour commencer le nettoyage")
 
     # === Graphiques ===
     elif choix == "Graphiques":
         st.subheader("📊 Menu Graphiques")
         graphique = st.selectbox(
             "Choisissez un type de graphique",
-            ["Histogramme", "Box Plot", "Nuage de points", "Courbes"]
+            [
+                "Histogramme", "Box Plot", "Nuage de points", "Courbes",
+                "🔴 Diagramme circulaire", 
+                "📊 Barres groupées",
+                "📈 Surfaces empilées",
+                "🎯 Violon",
+                "🔥 Carte thermique",
+                "🐝 Bandes & Essaims",
+                "📐 Pyramide des âges"
+            ]
         )
 
-        if graphique == "Histogramme":
-            fichier = st.file_uploader("Importer un fichier CSV", type=["csv"], key="hist")
-            if fichier:
+        fichier = st.file_uploader("Importer un fichier CSV", type=["csv"], key="graph_upload")
+        
+        if fichier:
+            df = load_csv(fichier)
+            st.write("Aperçu des données :")
+            st.dataframe(df.head())
+
+            if graphique == "Histogramme":
                 from modules.plots import histogram
-                df = load_csv(fichier)
                 histogram.run(df)
 
-        elif graphique == "Box Plot":
-            fichier = st.file_uploader("Importer un fichier CSV", type=["csv"], key="box")
-            if fichier:
+            elif graphique == "Box Plot":
                 from modules.plots import boxplot
-                df = load_csv(fichier)
                 boxplot.run(df)
 
-        elif graphique == "Nuage de points":
-            fichier = st.file_uploader("Importer un fichier CSV", type=["csv"], key="scatter")
-            if fichier:
+            elif graphique == "Nuage de points":
                 from modules.plots import scatter
-                df = load_csv(fichier)
                 scatter.run(df)
 
-        elif graphique == "Courbes":
-            fichier = st.file_uploader("Importer un fichier CSV", type=["csv"], key="line")
-            if fichier:
+            elif graphique == "Courbes":
                 from modules.plots import courbes
-                df = load_csv(fichier)
                 courbes.run(df)
+
+            elif graphique == "🔴 Diagramme circulaire":
+                from modules.plots import pie_chart
+                pie_chart.run(df)
+
+            elif graphique == "📊 Barres groupées":
+                from modules.plots import barres_groupes
+                barres_groupes.run(df)
+            
+            elif graphique == "📈 Surfaces empilées":
+                from modules.plots import stacked_area
+                stacked_area.run(df)
+                
+            elif graphique == "🎯 Violon":
+                from modules.plots import violin
+                violin.run(df)
+            
+            elif graphique == "🔥 Carte thermique":
+                from modules.plots import heatmap
+                heatmap.run(df)
+                
+            elif graphique == "🐝 Bandes & Essaims":
+                from modules.plots import strip_swarm
+                strip_swarm.run(df)
+            
+            elif graphique == "📐 Pyramide des âges":
+                from modules.plots import pyramid
+                pyramid.run(df)
+
+            # Les autres graphiques seront ajoutés au fur et à mesure
+            else:
+                st.info(f"Module {graphique} en cours de développement...")
+
+        else:
+            st.info("Veuillez importer un fichier CSV pour afficher les graphiques.")
 
     # === TimeSeries ===
     elif choix == "TimeSeries":
         st.subheader("⏱️ Menu TimeSeries")
+        
         ts_type = st.radio(
             "Choisissez un type de série temporelle",
-            ["Série simple", "Séries multiples"]
+            ["Série simple", "Séries multiples", "🌿 Parcelle de Tiges"],
+            key="timeseries_type"
         )
 
         fichier = st.file_uploader("Importer un fichier CSV", type=["csv"], key="timeseries")
         if fichier:
             df = load_csv(fichier)
+            st.write("Aperçu des données :")
+            st.dataframe(df.head())
+            
             if ts_type == "Série simple":
-                fig = plot_time_series(df, "Date", "Confirmed", title="COVID-19 Confirmed Cases")
-                st.pyplot(fig)
-                plt.close(fig)  # 🔥 FERME LA FIGURE
+                run_simple(df)
+                
             elif ts_type == "Séries multiples":
-                fig = plot_time_series_multi(
-                    df,
-                    "Date",
-                    ["Confirmed", "Deaths", "Recovered"],
-                    title="COVID-19: Confirmed vs Deaths vs Recovered"
-                )
-                st.pyplot(fig)
-                plt.close(fig)  # 🔥 FERME LA FIGURE
+                run_multiple(df)
+                
+            elif ts_type == "🌿 Parcelle de Tiges":
+                from modules.plots import stem
+                stem.run(df)
         else:
-            st.info("Veuillez importer un fichier CSV pour afficher la série temporelle.")
+            st.info("Veuillez importer un fichier CSV pour afficher les séries temporelles.")
 
     # === Visualisation thématique ===
     elif choix == "Visualisation":
         st.subheader("📈 Visualisation thématique")
-        onglet = st.tabs(["Démographie", "Climat", "Finances", "Géographie"])
+        onglet = st.tabs(["Démographie", "Climat", "Finances", "Géographie", "🗺️ Treemap"])
 
         # --- Démographie ---
         with onglet[0]:
-            st.write("📊 Graphiques démographiques")
+            st.write("📊 Analyses Démographiques")
+            st.info("Pyramides des âges et analyses de population")
+            
             fichier = st.file_uploader("Importer un dataset démographique", type=["csv"], key="demo")
             if fichier:
                 df = load_csv(fichier)
                 st.dataframe(df.head())
-                if "Age" in df.columns and "Gender" in df.columns:
-                    fig, ax = plt.subplots()
-                    df[df["Gender"] == "Male"]["Age"].hist(alpha=0.5, label="Male", bins=20)
-                    df[df["Gender"] == "Female"]["Age"].hist(alpha=0.5, label="Female", bins=20)
-                    ax.set_xlabel("Âge")
-                    ax.set_ylabel("Nombre")
-                    ax.set_title("Pyramide des âges simplifiée")
-                    plt.legend()
-                    st.pyplot(fig)
-                    plt.close(fig)  # 🔥 FERME LA FIGURE
-                else:
-                    st.warning("Colonnes 'Age' et 'Gender' introuvables.")
+                
+                # Utiliser notre module pyramide amélioré
+                from modules.plots import pyramid
+                pyramid.run(df)
 
         # --- Climat ---
         with onglet[1]:
-            st.write("🌡️ Graphiques climatiques")
+            st.write("🌡️ Analyses Climatiques")
+            st.info("Évolution des températures et données environnementales")
+            
             fichier = st.file_uploader("Importer un dataset climatique", type=["csv"], key="climat")
             if fichier:
                 df = load_csv(fichier)
                 st.dataframe(df.head())
-                if "Date" in df.columns and "Temperature" in df.columns:
-                    fig, ax = plt.subplots()
-                    ax.plot(pd.to_datetime(df["Date"]), df["Temperature"])
-                    ax.set_title("Évolution de la température")
-                    ax.set_xlabel("Date")
-                    ax.set_ylabel("Température")
-                    st.pyplot(fig)
-                    plt.close(fig)  # 🔥 FERME LA FIGURE
+                
+                # Détection automatique des colonnes climatiques
+                temp_cols = [col for col in df.columns if any(x in col.lower() for x in ['temp', 'temperature', 'chaleur'])]
+                precip_cols = [col for col in df.columns if any(x in col.lower() for x in ['precip', 'pluie', 'rain'])]
+                date_cols = [col for col in df.columns if any(x in col.lower() for x in ['date', 'time', 'année'])]
+                
+                if temp_cols and date_cols:
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        date_col = st.selectbox("Colonne date :", date_cols, key="climate_date")
+                    with col2:
+                        data_col = st.selectbox("Donnée à analyser :", temp_cols + precip_cols, key="climate_data")
+                    
+                    if st.button("🌡️ Analyser les données climatiques", key="climate_analyze"):
+                        run_simple(df)
                 else:
-                    st.warning("Colonnes 'Date' et 'Temperature' introuvables.")
+                    st.warning("Colonnes de date ou données climatiques introuvables.")
 
         # --- Finances ---
         with onglet[2]:
-            st.write("💹 Graphiques financiers (Car Sales)")
-            fichier = st.file_uploader("Importer le dataset Car Sales", type=["csv"], key="carsales")
+            st.write("💹 Graphiques financiers")
+            st.info("Analyse de données financières et commerciales")
+            
+            fichier = st.file_uploader("Importer un dataset financier", type=["csv"], key="carsales")
             if fichier:
                 df = load_csv(fichier)
                 st.dataframe(df.head())
-                if "Price" in df.columns and "Mileage" in df.columns:
-                    fig, ax = plt.subplots()
-                    ax.scatter(df["Mileage"], df["Price"], alpha=0.5)
-                    ax.set_xlabel("Kilométrage")
-                    ax.set_ylabel("Prix")
-                    ax.set_title("Prix vs Kilométrage (Car Sales)")
-                    st.pyplot(fig)
-                    plt.close(fig)  # 🔥 FERME LA FIGURE
+                
+                # Options d'analyse financière
+                numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
+                date_cols = [col for col in df.columns if any(x in col.lower() for x in ['date', 'time', 'année', 'month'])]
+                
+                if numeric_cols:
+                    st.subheader("📈 Options d'analyse")
+                    
+                    analysis_type = st.radio(
+                        "Type d'analyse :",
+                        ["Série temporelle", "Comparaison multiple", "Corrélations"],
+                        key="finance_analysis"
+                    )
+                    
+                    if analysis_type == "Série temporelle" and date_cols:
+                        col1, col2 = st.columns(2)
+                        with col1:
+                            date_col = st.selectbox("Colonne date :", date_cols, key="finance_date")
+                        with col2:
+                            value_col = st.selectbox("Variable financière :", numeric_cols, key="finance_value")
+                        
+                        if st.button("💹 Analyser la série financière", key="finance_analyze"):
+                            run_simple(df)
+                    
+                    elif analysis_type == "Comparaison multiple":
+                        selected_cols = st.multiselect(
+                            "Variables à comparer :",
+                            numeric_cols,
+                            default=numeric_cols[:min(3, len(numeric_cols))],
+                            key="finance_multi"
+                        )
+                        
+                        if selected_cols and st.button("📊 Comparer les variables", key="finance_compare"):
+                            if date_cols:
+                                run_multiple(df)
+                            else:
+                                # Graphique de comparaison sans date
+                                fig, ax = plt.subplots(figsize=(10, 6))
+                                df[selected_cols].plot(kind='bar', ax=ax)
+                                ax.set_title("Comparaison des variables financières")
+                                ax.set_ylabel("Valeurs")
+                                plt.xticks(rotation=45)
+                                plt.tight_layout()
+                                st.pyplot(fig)
+                                plt.close(fig)
+                    
+                    elif analysis_type == "Corrélations":
+                        if len(numeric_cols) > 1:
+                            st.subheader("📈 Matrice de Corrélation")
+                            corr_matrix = df[numeric_cols].corr()
+                            
+                            fig, ax = plt.subplots(figsize=(10, 8))
+                            im = ax.imshow(corr_matrix, cmap='coolwarm', vmin=-1, vmax=1)
+                            
+                            # Ajouter les valeurs dans les cases
+                            for i in range(len(numeric_cols)):
+                                for j in range(len(numeric_cols)):
+                                    text = ax.text(j, i, f'{corr_matrix.iloc[i, j]:.2f}',
+                                            ha="center", va="center", color="black", fontweight='bold')
+                            
+                            ax.set_xticks(range(len(numeric_cols)))
+                            ax.set_yticks(range(len(numeric_cols)))
+                            ax.set_xticklabels(numeric_cols, rotation=45)
+                            ax.set_yticklabels(numeric_cols)
+                            ax.set_title("Matrice de Corrélation des Variables Financières", fontweight='bold')
+                            
+                            plt.colorbar(im, ax=ax)
+                            plt.tight_layout()
+                            st.pyplot(fig)
+                            plt.close(fig)
+                        else:
+                            st.warning("Pas assez de colonnes numériques pour une analyse de corrélation")
+                
                 else:
-                    st.warning("Colonnes 'Price' et 'Mileage' introuvables.")
+                    st.warning("Aucune colonne numérique trouvée pour l'analyse financière.")
 
         # --- Géographie ---
         with onglet[3]:
             st.write("🗺️ Graphiques géographiques")
+            
+            # Instructions détaillées
+            st.info("""
+            **📋 Format requis pour la carte :**
+            - `Country` : Noms de pays en **ANGLAIS** (ex: "France", "Germany", "United States")
+            - `Value` : Valeurs numériques pour la couleur
+            - Optionnel : Autres colonnes numériques ou catégorielles
+            """)
+            
+            # Exemple de données
+            with st.expander("📖 Exemple de format de données"):
+                st.write("""
+                | Country         | Value | Population | Category |
+                |-----------------|-------|------------|----------|
+                | France          | 85    | 67000000   | Europe   |
+                | Germany         | 92    | 83000000   | Europe   |
+                | United States   | 95    | 331000000  | Americas |
+                | Japan           | 89    | 126000000  | Asia     |
+                """)
+            
             fichier = st.file_uploader("Importer un dataset géographique", type=["csv"], key="geo")
+            
+            if fichier:
+                df = load_csv(fichier)
+                st.subheader("📊 Aperçu des données")
+                st.dataframe(df.head())
+                
+                # Vérification des colonnes
+                country_cols = [col for col in df.columns if 'country' in col.lower() or 'pays' in col.lower()]
+                value_cols = df.select_dtypes(include=['number']).columns.tolist()
+                
+                if country_cols and value_cols:
+                    st.success("✅ Colonnes détectées avec succès !")
+                    
+                    # Sélection des colonnes
+                    col1, col2 = st.columns(2)
+                    
+                    with col1:
+                        country_column = st.selectbox(
+                            "Colonne des pays:",
+                            options=country_cols,
+                            index=0
+                        )
+                    
+                    with col2:
+                        value_column = st.selectbox(
+                            "Colonne des valeurs:",
+                            options=value_cols,
+                            index=0
+                        )
+                    
+                    # Options de la carte
+                    st.subheader("🎨 Options de la carte")
+                    col3, col4 = st.columns(2)
+                    
+                    with col3:
+                        color_scale = st.selectbox(
+                            "Échelle de couleurs:",
+                            ["Viridis", "Plasma", "Inferno", "Magma", "Blues", "Reds", "Greens"]
+                        )
+                    
+                    with col4:
+                        map_title = st.text_input("Titre de la carte:", "Carte thématique par pays")
+                    
+                    # Génération de la carte
+                    if st.button("🗺️ Générer la carte", type="primary"):
+                        try:
+                            # Nettoyage des données
+                            df_clean = df[[country_column, value_column]].dropna()
+                            
+                            # Création de la carte
+                            fig = px.choropleth(
+                                df_clean,
+                                locations=country_column,
+                                locationmode="country names",
+                                color=value_column,
+                                color_continuous_scale=color_scale,
+                                title=map_title,
+                                hover_name=country_column,
+                                labels={value_column: 'Valeur'}
+                            )
+                            
+                            fig.update_layout(
+                                geo=dict(
+                                    showframe=False,
+                                    showcoastlines=True,
+                                    projection_type='equirectangular'
+                                )
+                            )
+                            
+                            st.plotly_chart(fig, use_container_width=True)
+                            
+                            # Statistiques
+                            st.subheader("📈 Statistiques des données")
+                            col_stat1, col_stat2, col_stat3 = st.columns(3)
+                            
+                            with col_stat1:
+                                st.metric("Pays représentés", df_clean[country_column].nunique())
+                            
+                            with col_stat2:
+                                st.metric("Valeur moyenne", f"{df_clean[value_column].mean():.2f}")
+                            
+                            with col_stat3:
+                                st.metric("Valeur max", f"{df_clean[value_column].max():.2f}")
+                            
+                        except Exception as e:
+                            st.error(f"❌ Erreur lors de la génération de la carte: {str(e)}")
+                            st.info("💡 Vérifiez que les noms de pays sont en anglais et correctement orthographiés")
+                
+                else:
+                    if not country_cols:
+                        st.error("❌ Aucune colonne de pays détectée. Cherche colonnes avec 'country' ou 'pays'")
+                    if not value_cols:
+                        st.error("❌ Aucune colonne numérique détectée pour les valeurs")
+                    
+                    st.info("""
+                    **Colonnes détectées dans votre fichier:**
+                    - Textuelles: {}
+                    - Numériques: {}
+                    """.format(
+                        [col for col in df.columns if df[col].dtype == 'object'],
+                        value_cols
+                    ))
+            
+            else:
+                st.info("📁 Veuillez importer un CSV avec des données géographiques")
+
+        # --- Treemap ---
+        with onglet[4]:
+            st.write("🗺️ Treemap Hiérarchique")
+            fichier = st.file_uploader("Importer un dataset hiérarchique", type=["csv"], key="treemap")
             if fichier:
                 df = load_csv(fichier)
                 st.dataframe(df.head())
-                if "Country" in df.columns and "Value" in df.columns:
-                    fig = px.choropleth(
-                        df,
-                        locations="Country",
-                        locationmode="country names",
-                        color="Value",
-                        color_continuous_scale="Viridis",
-                        title="Carte thématique par pays"
-                    )
-                    st.plotly_chart(fig, use_container_width=True)
-                    # Plotly gère mieux la mémoire, pas besoin de close
-                else:
-                    st.warning("Le dataset doit contenir les colonnes 'Country' et 'Value'.")
+                from modules.plots import treemap
+                treemap.run(df)
             else:
-                st.info("Veuillez importer un CSV avec au moins 'Country' et 'Value'.")
+                st.info("Veuillez importer un CSV avec une structure hiérarchique (ex: Continent > Pays > Ville > Population)")
 
     st.markdown("---")
+    
+    # === BOUTON PDF FONCTIONNEL AVEC ANIMATIONS ===
+    st.markdown("""
+    <style>
+    .pdf-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 30px;
+        border-radius: 15px;
+        color: white;
+        text-align: center;
+        margin: 20px 0;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .pdf-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    .pdf-subtitle {
+        font-size: 16px;
+        margin-bottom: 20px;
+        opacity: 0.9;
+    }
+    </style>
+    
+    <div class="pdf-section">
+        <div class="pdf-title">📕 MANUEL COMPLET</div>
+        <div class="pdf-subtitle">Téléchargez le guide d'utilisation détaillé de l'application</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Bouton de téléchargement PDF fonctionnel
+    try:
+        import base64
+        
+        # Chemin vers votre PDF
+        pdf_path = "assets/manuel_visualisation_universelle.pdf"
+        
+        # Lire le PDF
+        with open(pdf_path, "rb") as pdf_file:
+            pdf_bytes = pdf_file.read()
+        
+        # Encoder en base64
+        b64_pdf = base64.b64encode(pdf_bytes).decode()
+        
+        # Créer le bouton de téléchargement avec animations
+        st.markdown(
+            f"""
+            <div style='text-align: center; margin: 20px 0;'>
+                <a href="data:application/pdf;base64,{b64_pdf}" 
+                   download="manuel_visualisation_universelle.pdf"
+                   class="download-btn-pdf">
+                   ⬇️ TÉLÉCHARGER LE MANUEL PDF
+                </a>
+            </div>
+            """, 
+            unsafe_allow_html=True
+        )
+        
+        st.success("✅ Manuel prêt ! Cliquez sur le bouton jaune pour télécharger.")
+        
+    except FileNotFoundError:
+        st.error("❌ Fichier PDF non trouvé. Vérifiez le chemin : assets/manuel_visualisation_universelle.pdf")
+    except Exception as e:
+        st.error(f"❌ Erreur lors du chargement du PDF : {str(e)}")
+
+    # === COPYRIGHT EN BAS ===
+    st.markdown("---")
+    
+    # === VOTRE COPYRIGHT ===
     st.markdown(
-        "<div style='text-align: center; font-size: 0.9em; color: green;'>"
-        "© 2025 Ossiny B. Tous droits réservés."
-        "</div>",
+        """
+        <div style='text-align: center; margin-top: 40px; padding: 20px; 
+                    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                    border-radius: 10px; border-left: 5px solid #FFD700;'>
+            <p style='font-size: 1.1em; color: #2c3e50; font-weight: bold; margin: 0;'>
+                © 2025 Visualisation Universelle - Ossiny B.
+            </p>
+            <p style='font-size: 0.9em; color: #7f8c8d; margin: 5px 0 0 0;'>
+                Tous droits réservés | Application de visualisation de données avancée
+            </p>
+        </div>
+        """, 
         unsafe_allow_html=True
     )
-
 
 if __name__ == "__main__":
     main()

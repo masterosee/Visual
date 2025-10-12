@@ -1,0 +1,17 @@
+Diagramme circulaire
+
+Diagramme à barres groupées
+
+Tableau des surfaces empilées
+
+Diagramme en boîte multiple
+
+Trame de violon
+
+Carte thermique
+
+Parcelle de tiges
+
+Plots en bandes et en essaims
+
+Plan du site
