@@ -836,10 +836,10 @@ def main():
             if fichier:
                 df = load_csv(fichier)
                 st.dataframe(df.head())
-<<<<<<< HEAD
+
                 from modules.plots import treemap
                 treemap.run(df)
-=======
+
                 if "Country" in df.columns and "Value" in df.columns:
                     fig = px.choropleth(
                         df,
@@ -852,7 +852,7 @@ def main():
                     st.plotly_chart(fig, use_container_width=True)
                 else:
                     st.warning("Le dataset doit contenir les colonnes 'Country' et 'Value'.")
->>>>>>> 9efcac9f50789b947bd04cd31bce189ce6bd735e
+
             else:
                 st.info("Veuillez importer un CSV avec une structure hiérarchique (ex: Continent > Pays > Ville > Population)")
 
