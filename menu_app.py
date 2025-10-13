@@ -650,7 +650,6 @@ elif choix == "Graphiques":
                 run_simple(df)
                 
             elif ts_type == "Séries multiples":
-<<<<<<< HEAD
                 fig = plot_time_series_multi(
                     df,
                     "Date",
@@ -659,10 +658,9 @@ elif choix == "Graphiques":
                 )
                 st.pyplot(fig)
                 plt.close(fig)  # 🔥 FERME LA FIGURE
-=======
+
                 run_multiple(df)
                 
->>>>>>> 53072bd5f3f5b260c38666b61d38106d103b1645
             elif ts_type == "🌿 Parcelle de Tiges":
                 from modules.plots import stem
                 stem.run(df)
@@ -937,10 +935,10 @@ elif choix == "Graphiques":
             if fichier:
                 df = load_csv(fichier)
                 st.dataframe(df.head())
-<<<<<<< HEAD
+
                 from modules.plots import treemap
                 treemap.run(df)
-=======
+
 
                 from modules.plots import treemap
                 treemap.run(df)
@@ -958,7 +956,6 @@ elif choix == "Graphiques":
                 else:
                     st.warning("Le dataset doit contenir les colonnes 'Country' et 'Value'.")
 
->>>>>>> 53072bd5f3f5b260c38666b61d38106d103b1645
             else:
                 st.info("Veuillez importer un CSV avec une structure hiérarchique (ex: Continent > Pays > Ville > Population)")
 
