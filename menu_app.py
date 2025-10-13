@@ -632,12 +632,11 @@ elif choix == "Graphiques":
         
         ts_type = st.radio(
             "Choisissez un type de série temporelle",
-<<<<<<< HEAD
+
             ["Série simple", "Séries multiples", "🌿 Parcelle de Tiges"]
-=======
             ["Série simple", "Séries multiples", "🌿 Parcelle de Tiges"],
             key="timeseries_type"
->>>>>>> 53072bd5f3f5b260c38666b61d38106d103b1645
+
         )
 
         fichier = st.file_uploader("Importer un fichier CSV", type=["csv"], key="timeseries")
