@@ -149,6 +149,7 @@ def main():
     section[data-testid="stSidebar"] {
         background-color: #f8f9fa;
         background-image: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+        
     }
     
     /* Style des headers */
