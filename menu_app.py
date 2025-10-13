@@ -520,11 +520,9 @@ def main():
                             
                             with col1:
                                 st.metric("Lignes", df_clean.shape[0], 
-<<<<<<< HEAD
+
                                          delta=df_clean.shape[0] - df.shape[0])
-=======
-                                    delta=df_clean.shape[0] - df.shape[0])
->>>>>>> 53072bd5f3f5b260c38666b61d38106d103b1645
+
                             with col2:
                                 st.metric("Colonnes", df_clean.shape[1])
                             with col3:
