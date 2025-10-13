@@ -261,7 +261,7 @@ def main():
         transform: translateY(-2px) !important;
         box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
         border-color: #90EE90 !important;
-=======
+
     /* ======== STYLES MOBILE ======== */
     @media (max-width: 768px) {
         /* Adapter le contenu principal */
@@ -328,7 +328,7 @@ def main():
         svg {
             width: 80px !important;
         }
->>>>>>> 9efcac9f50789b947bd04cd31bce189ce6bd735e
+
     }
     </style>
     """, unsafe_allow_html=True)
