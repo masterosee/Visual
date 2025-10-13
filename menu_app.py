@@ -858,37 +858,7 @@ def main():
 
     st.markdown("---")
     
-    # === BOUTON PDF FONCTIONNEL AVEC ANIMATIONS ===
-    st.markdown("""
-    <style>
-    .pdf-section {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 30px;
-        border-radius: 15px;
-        color: white;
-        text-align: center;
-        margin: 20px 0;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
-    .pdf-title {
-        font-size: 24px;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
-    .pdf-subtitle {
-        font-size: 16px;
-        margin-bottom: 20px;
-        opacity: 0.9;
-    }
-    </style>
-    
-    <div class="pdf-section">
-        <div class="pdf-title">📕 MANUEL COMPLET</div>
-        <div class="pdf-subtitle">Téléchargez le guide d'utilisation détaillé de l'application</div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Bouton de téléchargement PDF fonctionnel
+    # === CARTE MANUEL COMPLET AVEC BOUTON INTÉGRÉ ===
     try:
         import base64
         
@@ -902,26 +872,80 @@ def main():
         # Encoder en base64
         b64_pdf = base64.b64encode(pdf_bytes).decode()
         
-        # Créer le bouton de téléchargement avec animations
-        st.markdown(
-            f"""
-            <div style='text-align: center; margin: 20px 0;'>
-                <a href="data:application/pdf;base64,{b64_pdf}" 
-                   download="manuel_visualisation_universelle.pdf"
-                   class="download-btn-pdf">
-                   ⬇️ TÉLÉCHARGER LE MANUEL PDF
-                </a>
-            </div>
-            """, 
-            unsafe_allow_html=True
-        )
+        # Carte complète avec bouton intégré
+        st.markdown(f"""
+        <style>
+        .manual-card {{
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }}
+        .manual-title {{
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }}
+        .manual-subtitle {{
+            font-size: 16px;
+            margin-bottom: 25px;
+            opacity: 0.9;
+        }}
+        .manual-btn {{
+            background: #FFD700 !important;
+            color: black !important;
+            padding: 15px 30px !important;
+            text-decoration: none !important;
+            border-radius: 8px !important;
+            font-weight: bold !important;
+            display: inline-block !important;
+            border: 2px solid #FFD700 !important;
+            font-size: 16px !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+            cursor: pointer;
+        }}
+        .manual-btn:hover {{
+            background: #90EE90 !important;
+            color: black !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+            border-color: #90EE90 !important;
+        }}
+        </style>
         
-        st.success("✅ Manuel prêt ! Cliquez sur le bouton jaune pour télécharger.")
+        <div class="manual-card">
+            <div class="manual-title">📕 MANUEL COMPLET</div>
+            <div class="manual-subtitle">Guide d'utilisation détaillé de l'application</div>
+            <a href="data:application/pdf;base64,{b64_pdf}" 
+            download="manuel_visualisation_universelle.pdf"
+            class="manual-btn">
+            ⬇️ TÉLÉCHARGER LE GUIDE
+            </a>
+        </div>
+        """, unsafe_allow_html=True)
         
     except FileNotFoundError:
-        st.error("❌ Fichier PDF non trouvé. Vérifiez le chemin : assets/manuel_visualisation_universelle.pdf")
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); 
+                    padding: 30px; border-radius: 15px; color: white; text-align: center;
+                    margin: 20px 0;'>
+            <div style='font-size: 24px; font-weight: bold; margin-bottom: 10px;'>❌ MANUEL INDISPONIBLE</div>
+            <div style='font-size: 16px;'>Fichier PDF non trouvé : assets/manuel_visualisation_universelle.pdf</div>
+        </div>
+        """, unsafe_allow_html=True)
     except Exception as e:
-        st.error(f"❌ Erreur lors du chargement du PDF : {str(e)}")
+        st.markdown(f"""
+        <div style='background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); 
+                    padding: 30px; border-radius: 15px; color: white; text-align: center;
+                    margin: 20px 0;'>
+            <div style='font-size: 24px; font-weight: bold; margin-bottom: 10px;'>❌ ERREUR</div>
+            <div style='font-size: 16px;'>Erreur lors du chargement : {str(e)}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
     # === COPYRIGHT EN BAS ===
     st.markdown("---")
