@@ -549,25 +549,22 @@ def main():
         else:
             st.info("📁 Veuillez importer un fichier CSV pour commencer le nettoyage")
 
-    # === Graphiques ===
-    elif choix == "Graphiques":
-        st.subheader("📊 Menu Graphiques")
-        graphique = st.selectbox(
-            "Choisissez un type de graphique",
-            [
-                "Histogramme", "Box Plot", "Nuage de points", "Courbes",
-                "🔴 Diagramme circulaire", 
-                "📊 Barres groupées",
-                "📈 Surfaces empilées",
-                "🎯 Violon",
-                "🔥 Carte thermique",
-                "🐝 Bandes & Essaims",
-<<<<<<< HEAD
-=======
-                "📐 Pyramide des âges"
->>>>>>> 53072bd5f3f5b260c38666b61d38106d103b1645
-            ]
-        )
+# === Graphiques ===
+elif choix == "Graphiques":
+    st.subheader("📊 Menu Graphiques")
+    graphique = st.selectbox(
+        "Choisissez un type de graphique",
+        [
+            "Histogramme", "Box Plot", "Nuage de points", "Courbes",
+            "🔴 Diagramme circulaire", 
+            "📊 Barres groupées",
+            "📈 Surfaces empilées",
+            "🎯 Violon",
+            "🔥 Carte thermique",
+            "🐝 Bandes & Essaims",
+            "📐 Pyramide des âges"
+        ]
+    )
 
         fichier = st.file_uploader("Importer un fichier CSV", type=["csv"], key="graph_upload")
         
