@@ -550,6 +550,14 @@ def main():
             st.info("📁 Veuillez importer un fichier CSV pour commencer le nettoyage")
 
 # === Graphiques ===
+# === Nettoyage ===
+elif choix == "Nettoyage des données":
+    # ... tout le code du nettoyage ...
+    
+    # À LA FIN DU BLOC NETTOYAGE, ça devrait se terminer proprement
+    # sans code orphelin
+
+# === Graphiques ===
 elif choix == "Graphiques":
     st.subheader("📊 Menu Graphiques")
     graphique = st.selectbox(
