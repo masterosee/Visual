@@ -1,5 +1,4 @@
 
-
 # menu_app.py
 import streamlit as st
 import pandas as pd
@@ -41,6 +40,85 @@ if user_row.empty or not user_row.iloc[0]['is_approved']:
     st.warning("⛔ Votre compte n'est pas encore approuvé.")
     st.stop()
 
+<<<<<<< HEAD
+def section_telechargement_manuel():
+    """Section élégante pour le téléchargement du manuel PDF"""
+    st.markdown("---")
+    
+    # Style CSS pour le bouton
+    st.markdown("""
+    <style>
+    .manuel-card {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border-radius: 15px;
+        padding: 30px;
+        border: 2px solid #FFD700;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        margin: 20px 0;
+        text-align: center;
+    }
+    .manuel-title {
+        color: #2c3e50;
+        margin-bottom: 15px;
+    }
+    .manuel-text {
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 25px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    # Carte avec composants Streamlit
+    st.markdown('<div class="manuel-card">', unsafe_allow_html=True)
+    st.markdown('<h3 class="manuel-title">📚 Guide Complet d\'Utilisation</h3>', unsafe_allow_html=True)
+    st.markdown('<p class="manuel-text">Téléchargez le <strong>Manuel de Visualisation Universelle</strong> pour maîtriser toutes les fonctionnalités de l\'application. Ce guide détaillé vous accompagne pas à pas dans la création de visualisations impactantes, le nettoyage de données avancé et l\'exportation de vos résultats.</p>', unsafe_allow_html=True)
+    
+    # Bouton de téléchargement avec style personnalisé
+    try:
+        with open("assets/Manuel_Visualisation_Universelle.pdf", "rb") as pdf_file:
+            pdf_data = pdf_file.read()
+        
+        # Style pour le bouton de téléchargement
+        st.markdown("""
+        <style>
+        div.stDownloadButton > button {
+            background: linear-gradient(135deg, #FFD700 0%, #D4AF37 100%) !important;
+            color: black !important;
+            border: none !important;
+            border-radius: 25px !important;
+            padding: 12px 30px !important;
+            font-weight: bold !important;
+            font-size: 16px !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3) !important;
+            margin: 0 auto !important;
+        }
+        div.stDownloadButton > button:hover {
+            background: linear-gradient(135deg, #90EE90 0%, #32CD32 100%) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 20px rgba(144, 238, 144, 0.4) !important;
+            color: black !important;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+        
+        st.download_button(
+            label="📥 Télécharger le Manuel",
+            data=pdf_data,
+            file_name="Manuel_Visualisation_Universelle.pdf",
+            mime="application/pdf",
+            key="manuel_download"
+        )
+        
+    except FileNotFoundError:
+        st.error("❌ Le fichier du manuel n'est pas disponible.")
+        st.info("💡 Assurez-vous que le dossier 'assets' contient le fichier 'Manuel_Visualisation_Universelle.pdf'")
+    
+    st.markdown('</div>', unsafe_allow_html=True)
+
+=======
+>>>>>>> 53072bd5f3f5b260c38666b61d38106d103b1645
 def main():
     st.set_page_config(
         page_title="Visualisation Universelle", 
@@ -367,6 +445,9 @@ def main():
     if choix == "Accueil":
         st.subheader("Bienvenue 👋")
         st.write("Choisissez une option dans le menu de gauche.")
+        
+        # Ajout de la section téléchargement manuel dans l'accueil
+        section_telechargement_manuel()
 
     # === Nettoyage ===
     elif choix == "Nettoyage des données":
@@ -439,7 +520,11 @@ def main():
                             
                             with col1:
                                 st.metric("Lignes", df_clean.shape[0], 
+<<<<<<< HEAD
+                                         delta=df_clean.shape[0] - df.shape[0])
+=======
                                     delta=df_clean.shape[0] - df.shape[0])
+>>>>>>> 53072bd5f3f5b260c38666b61d38106d103b1645
                             with col2:
                                 st.metric("Colonnes", df_clean.shape[1])
                             with col3:
@@ -479,7 +564,10 @@ def main():
                 "🎯 Violon",
                 "🔥 Carte thermique",
                 "🐝 Bandes & Essaims",
+<<<<<<< HEAD
+=======
                 "📐 Pyramide des âges"
+>>>>>>> 53072bd5f3f5b260c38666b61d38106d103b1645
             ]
         )
 
@@ -529,10 +617,13 @@ def main():
             elif graphique == "🐝 Bandes & Essaims":
                 from modules.plots import strip_swarm
                 strip_swarm.run(df)
+<<<<<<< HEAD
+=======
             
             elif graphique == "📐 Pyramide des âges":
                 from modules.plots import pyramid
                 pyramid.run(df)
+>>>>>>> 53072bd5f3f5b260c38666b61d38106d103b1645
 
             # Les autres graphiques seront ajoutés au fur et à mesure
             else:
@@ -547,8 +638,12 @@ def main():
         
         ts_type = st.radio(
             "Choisissez un type de série temporelle",
+<<<<<<< HEAD
+            ["Série simple", "Séries multiples", "🌿 Parcelle de Tiges"]
+=======
             ["Série simple", "Séries multiples", "🌿 Parcelle de Tiges"],
             key="timeseries_type"
+>>>>>>> 53072bd5f3f5b260c38666b61d38106d103b1645
         )
 
         fichier = st.file_uploader("Importer un fichier CSV", type=["csv"], key="timeseries")
@@ -561,8 +656,19 @@ def main():
                 run_simple(df)
                 
             elif ts_type == "Séries multiples":
+<<<<<<< HEAD
+                fig = plot_time_series_multi(
+                    df,
+                    "Date",
+                    ["Confirmed", "Deaths", "Recovered"],
+                    title="COVID-19: Confirmed vs Deaths vs Recovered"
+                )
+                st.pyplot(fig)
+                plt.close(fig)  # 🔥 FERME LA FIGURE
+=======
                 run_multiple(df)
                 
+>>>>>>> 53072bd5f3f5b260c38666b61d38106d103b1645
             elif ts_type == "🌿 Parcelle de Tiges":
                 from modules.plots import stem
                 stem.run(df)
@@ -837,6 +943,10 @@ def main():
             if fichier:
                 df = load_csv(fichier)
                 st.dataframe(df.head())
+<<<<<<< HEAD
+                from modules.plots import treemap
+                treemap.run(df)
+=======
 
                 from modules.plots import treemap
                 treemap.run(df)
@@ -854,6 +964,7 @@ def main():
                 else:
                     st.warning("Le dataset doit contenir les colonnes 'Country' et 'Value'.")
 
+>>>>>>> 53072bd5f3f5b260c38666b61d38106d103b1645
             else:
                 st.info("Veuillez importer un CSV avec une structure hiérarchique (ex: Continent > Pays > Ville > Population)")
 
