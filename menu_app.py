@@ -612,13 +612,12 @@ elif choix == "Graphiques":
             elif graphique == "🐝 Bandes & Essaims":
                 from modules.plots import strip_swarm
                 strip_swarm.run(df)
-<<<<<<< HEAD
-=======
+
             
             elif graphique == "📐 Pyramide des âges":
                 from modules.plots import pyramid
                 pyramid.run(df)
->>>>>>> 53072bd5f3f5b260c38666b61d38106d103b1645
+
 
             # Les autres graphiques seront ajoutés au fur et à mesure
             else:
