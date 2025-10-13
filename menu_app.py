@@ -40,7 +40,7 @@ if user_row.empty or not user_row.iloc[0]['is_approved']:
     st.warning("⛔ Votre compte n'est pas encore approuvé.")
     st.stop()
 
-<<<<<<< HEAD
+
 def section_telechargement_manuel():
     """Section élégante pour le téléchargement du manuel PDF"""
     st.markdown("---")
@@ -117,8 +117,8 @@ def section_telechargement_manuel():
     
     st.markdown('</div>', unsafe_allow_html=True)
 
-=======
->>>>>>> 53072bd5f3f5b260c38666b61d38106d103b1645
+
+
 def main():
     st.set_page_config(
         page_title="Visualisation Universelle", 
