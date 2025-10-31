@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>📂 Importer / Exporter des données</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        table { border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 6px 12px; }
+        th { background: #f0f0f0; }
+        .actions { margin-top: 20px; }
+        .actions a { margin-right: 15px; }
+    </style>
+</head>
+<body>
+    <h2>📂 Importer un fichier CSV ou Excel</h2>
+
+    <!-- Formulaire d'import -->
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="file" required>
+        <button type="submit">Charger</button>
+    </form>
+
+    {% if columns %}
+        <h3>Aperçu des données :</h3>
+        <table>
+            <tr>
+                {% for col in columns %}
+                    <th>{{ col }}</th>
+                {% endfor %}
+            </tr>
+            {% for row in rows %}
+                <tr>
+                    {% for cell in row %}
+                        <td>{{ cell }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+
+        <!-- Liens d'export -->
+        <div class="actions">
+            <h3>Exporter les données :</h3>
+            <a href="{% url 'export_csv' %}">⬇️ Exporter en CSV</a>
+            <a href="{% url 'export_excel' %}">⬇️ Exporter en Excel</a>
+            <a href="{% url 'export_pdf' %}">⬇️ Exporter en PDF</a>
+        </div>
+    {% endif %}
+</body>
+</html>

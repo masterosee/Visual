@@ -1,0 +1,16 @@
+Country,Value,Population,Category
+France,85,67000000,Europe
+Germany,92,83000000,Europe
+United Kingdom,78,67000000,Europe
+Italy,65,60000000,Europe
+Spain,70,47000000,Europe
+United States,95,331000000,Americas
+Canada,88,38000000,Americas
+Brazil,45,213000000,Americas
+Japan,89,126000000,Asia
+China,75,1402000000,Asia
+India,40,1380000000,Asia
+Australia,82,25000000,Oceania
+Egypt,35,104000000,Africa
+South Africa,55,59300000,Africa
+Nigeria,30,206000000,Africa
