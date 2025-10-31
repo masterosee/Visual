@@ -111,39 +111,153 @@ def section_telechargement_manuel():
 
     
 
-
 def main():
     st.set_page_config(page_title="Visualisation Universelle", layout="wide")
     
-    
-    
-    # --- CSS pour masquer le logo GitHub (et optionnellement le menu ⋮) ---
+    # --- CSS RENFORCÉ pour masquer définitivement le logo GitHub ---
     st.markdown("""
     <style>
-    /* Masquer le lien GitHub en haut à droite */
-    .stApp a[href*="github.com"] {
-        display: none !important;
-        visibility: hidden !important;
-    }
-
-    /* (Optionnel) Masquer aussi le menu ⋮ */
+    /* ✅ SOLUTION COMPLÈTE POUR MASQUER GITHUB */
+    
+    /* 1. Masquer la toolbar entière */
     [data-testid="stToolbar"] {
         display: none !important;
         visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        height: 0 !important;
+        width: 0 !important;
     }
-    </style>
-    """, unsafe_allow_html=True)
-
-    # --- Ton CSS existant continue ici ---
-    st.markdown("""
-    <style>
+    
+    /* 2. Masquer spécifiquement les liens GitHub */
+    .stApp a[href*="github.com"],
+    header a[href*="github.com"],
+    [data-testid="stToolbar"] a[href*="github.com"],
+    a[href*="github.com"] {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        position: absolute !important;
+        left: -9999px !important;
+    }
+    
+    /* 3. Masquer le bouton menu ⋮ */
+    [data-testid="baseButton-header"] {
+        display: none !important;
+        visibility: hidden !important;
+    }
+    
+    /* 4. Masquer tout élément header suspect */
+    header [class*="toolbar"],
+    header [class*="github"],
+    .stToolbar,
+    .toolbar {
+        display: none !important;
+        visibility: hidden !important;
+    }
+    
+    /* 5. Ajuster l'espace vide laissé par la toolbar masquée */
+    .stApp > header {
+        height: 0 !important;
+        min-height: 0 !important;
+    }
+    
+    /* 6. Votre CSS existant pour le style général */
     .main {
         background-color: #f8f9fa;
         background-image: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     }
-    ...
+    .block-container {
+        background-color: white;
+        border-radius: 10px;
+        padding: 2rem;
+        margin-top: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e0e0e0;
+    }
+    section[data-testid="stSidebar"] {
+        background-color: #f8f9fa;
+        background-image: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+    .css-10trblm {
+        color: #2c3e50;
+    }
+    .stRadio > div {
+        background-color: white;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+    }
+    .stTabs [data-baseweb="tab-list"] {
+        background-color: #f8f9fa;
+        gap: 2px;
+    }
+    .stTabs [data-baseweb="tab"] {
+        background-color: #e9ecef;
+        border-radius: 4px 4px 0px 0px;
+        padding: 10px 20px;
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: white;
+    }
+    div.stButton > button:first-child {
+        background-color: #FFD700 !important;
+        color: black !important;
+        border-radius: 8px !important;
+        border: none !important;
+        font-weight: bold !important;
+        padding: 8px 20px !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+    }
+    div.stButton > button:first-child:hover {
+        background-color: #90EE90 !important;
+        color: black !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+    }
+    .stFileUploader > div {
+        background-color: white;
+        border: 2px dashed #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+    }
+    .stDataFrame {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+    }
+    .css-18e3th9 {
+        color: #000000;
+    }
+    .stInfo {
+        background-color: #e8f4fd;
+        border: 1px solid #bee5eb;
+        border-radius: 8px;
+    }
+    .stSuccess {
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        border-radius: 8px;
+    }
+    .stError {
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        border-radius: 8px;
+    }
     </style>
     """, unsafe_allow_html=True)
+
+    # Le reste de votre code continue ici...
+    if "show_export" not in st.session_state:
+        st.session_state.show_export = False
+
+    col1, col2 = st.columns([6, 1])
+    # ... etc, le reste de votre code existant
 
     
     
