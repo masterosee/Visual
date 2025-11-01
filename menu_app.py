@@ -1,4 +1,3 @@
-# menu_app.py
 import streamlit as st
 import pandas as pd
 import matplotlib
@@ -8,12 +7,24 @@ import plotly.express as px
 from utils import cleaning
 from modules.plots.time_series import plot_time_series, plot_time_series_multi
 
+# CSS POUR CACHER UNIQUEMENT LE LOGO GITHUB
+st.markdown("""
+<style>
+/* Cache uniquement le logo GitHub en haut à droite */
+[data-testid="stHeader"] [data-testid="stToolbar"] {
+    display: none !important;
+}
+
+/* Ou plus spécifique */
+[data-testid="stToolbar"] {
+    visibility: hidden !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 st.set_page_config(page_title="Visual Universelle", layout="wide")
 
-# ✅ VÉRIFICATION SIMPLIFIÉE
-# Le reste de votre code actuel...
-
-# ✅ VÉRIFICATION SIMPLIFIÉE
+# Le reste de votre code...
 
 
 
