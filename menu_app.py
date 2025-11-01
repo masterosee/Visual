@@ -98,13 +98,7 @@ def main():
         initial_sidebar_state="expanded"
     )
     
-    st.markdown("""
-    <style>
-        footer {display: none !important;}
-        [data-testid="stDecoration"] {display: none !important;}
-        .viewerBadge_container__1QSob {display: none !important;}
-    </style>
-""", unsafe_allow_html=True)
+
     
     if 'user' not in st.session_state:
         st.markdown("""
