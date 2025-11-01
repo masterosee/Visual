@@ -1,4 +1,3 @@
-
 # menu_app.py
 import streamlit as st
 import pandas as pd
@@ -9,33 +8,10 @@ import plotly.express as px
 from utils import cleaning
 from modules.plots.time_series import plot_time_series, plot_time_series_multi
 
-# CSS RENFORCÉ pour cacher les menus
-st.markdown("""
-<style>
-/* Cache le menu hamburger */
-#MainMenu {display: none !important;}
+st.set_page_config(page_title="Visual Universelle", layout="wide")
 
-/* Cache le footer "Manage app" */
-footer {display: none !important;}
-
-/* Cache le header de Streamlit */
-header {display: none !important;}
-
-/* Optionnel : cache le décorateur en bas à droite */
-.decorator {display: none !important;}
-</style>
-""", unsafe_allow_html=True)
-
-st.set_page_config(
-    page_title="Visual Universelle",
-    layout="wide",
-    initial_sidebar_state="expanded",
-    menu_items={
-        'Get Help': None,
-        'Report a bug': None,
-        'About': None
-    }
-)
+# ✅ VÉRIFICATION SIMPLIFIÉE
+# Le reste de votre code actuel...
 
 # ✅ VÉRIFICATION SIMPLIFIÉE
 
