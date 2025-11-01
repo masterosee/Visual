@@ -89,10 +89,22 @@ def section_telechargement_manuel():
 
 def main():
     st.set_page_config(
+    
+    
+  
+    
         page_title="Visualisation Universelle",
         layout="wide",
         initial_sidebar_state="expanded"
     )
+    
+    st.markdown("""
+    <style>
+        footer {display: none !important;}
+        [data-testid="stDecoration"] {display: none !important;}
+        .viewerBadge_container__1QSob {display: none !important;}
+    </style>
+""", unsafe_allow_html=True)
     
     if 'user' not in st.session_state:
         st.markdown("""
