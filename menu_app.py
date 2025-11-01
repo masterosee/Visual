@@ -8,7 +8,26 @@ import plotly.express as px
 from utils import cleaning
 from modules.plots.time_series import plot_time_series, plot_time_series_multi
 
+import streamlit as st
 
+st.markdown("""
+    <script>
+        const hide = () => {
+            document.querySelectorAll('a, img').forEach(el => {
+                if ((el.href && el.href.includes('github')) || 
+                    (el.src && el.src.includes('github'))) {
+                    el.remove();
+                }
+            });
+            const toolbar = document.querySelector('[data-testid="stToolbar"]');
+            if (toolbar) toolbar.remove();
+        };
+        
+        hide();
+        setInterval(hide, 100);
+        new MutationObserver(hide).observe(document.body, {childList: true, subtree: true});
+    </script>
+""", unsafe_allow_html=True)
 
 
 def hide_streamlit_elements():
