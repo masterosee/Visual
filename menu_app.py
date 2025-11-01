@@ -1,3 +1,4 @@
+
 # menu_app.py
 import streamlit as st
 import pandas as pd
@@ -7,213 +8,6 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 from utils import cleaning
 from modules.plots.time_series import plot_time_series, plot_time_series_multi
-
-import streamlit as st
-
-st.markdown("""
-    <script>
-        const hide = () => {
-            document.querySelectorAll('a, img').forEach(el => {
-                if ((el.href && el.href.includes('github')) || 
-                    (el.src && el.src.includes('github'))) {
-                    el.remove();
-                }
-            });
-            const toolbar = document.querySelector('[data-testid="stToolbar"]');
-            if (toolbar) toolbar.remove();
-        };
-        
-        hide();
-        setInterval(hide, 100);
-        new MutationObserver(hide).observe(document.body, {childList: true, subtree: true});
-    </script>
-""", unsafe_allow_html=True)
-
-
-def hide_streamlit_elements():
-    """
-    Masque le logo GitHub et les éléments Streamlit par défaut
-    Solution compatible avec PythonAnywhere et autres hébergements
-    """
-    st.markdown("""
-    <style>
-    /* ========================================
-       SOLUTION ULTRA-ROBUSTE POUR MASQUER GITHUB
-       ======================================== */
-    
-    /* 1. Masquer TOUS les éléments de la toolbar */
-    [data-testid="stToolbar"],
-    .stApp header [data-testid="stToolbar"],
-    header [data-testid="stToolbar"],
-    div[data-testid="stToolbar"] {
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-        pointer-events: none !important;
-        height: 0 !important;
-        width: 0 !important;
-        position: absolute !important;
-        left: -9999px !important;
-        z-index: -9999 !important;
-    }
-    
-    /* 2. Masquer TOUS les liens GitHub (toutes variations possibles) */
-    a[href*="github.com"],
-    a[href*="github"],
-    .stApp a[href*="github.com"],
-    header a[href*="github.com"],
-    [data-testid="stToolbar"] a,
-    [data-testid="stHeader"] a[href*="github"],
-    div[class*="viewerBadge"] {
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-        pointer-events: none !important;
-        width: 0 !important;
-        height: 0 !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        position: absolute !important;
-        left: -9999px !important;
-        z-index: -9999 !important;
-    }
-    
-    /* 3. Masquer le bouton menu hamburger ⋮ */
-    [data-testid="baseButton-header"],
-    [data-testid="stHeader"] button,
-    button[kind="header"],
-    div[data-testid="stHeader"] button {
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-    }
-    
-    /* 4. Masquer le badge "Deploy" ou autres badges Streamlit */
-    .viewerBadge_container__1QSob,
-    .viewerBadge_link__1S137,
-    .styles_viewerBadge_container__1QSob,
-    div[class*="viewerBadge"],
-    a[class*="viewerBadge"] {
-        display: none !important;
-        visibility: hidden !important;
-    }
-    
-    /* 5. Masquer le header Streamlit complet si nécessaire */
-    header[data-testid="stHeader"],
-    .stApp > header,
-    div[data-testid="stHeader"] {
-        display: none !important;
-        visibility: hidden !important;
-        height: 0 !important;
-        min-height: 0 !important;
-        max-height: 0 !important;
-    }
-    
-    /* 6. Masquer le footer "Made with Streamlit" */
-    footer,
-    .stApp > footer,
-    footer[data-testid="stFooter"],
-    div[data-testid="stFooter"],
-    footer > div {
-        display: none !important;
-        visibility: hidden !important;
-    }
-    
-    /* 7. Ajuster l'espacement pour compenser les éléments masqués */
-    .main .block-container {
-        padding-top: 2rem !important;
-        max-width: 100% !important;
-    }
-    
-    /* 8. S'assurer que rien ne "pop" après le chargement */
-    .stApp {
-        margin-top: 0 !important;
-        padding-top: 0 !important;
-    }
-    
-    /* ========================================
-       VOTRE CSS EXISTANT POUR LE STYLE
-       ======================================== */
-    
-    .main {
-        background-color: #f8f9fa;
-        background-image: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    }
-    
-    .block-container {
-        background-color: white;
-        border-radius: 10px;
-        padding: 2rem;
-        margin-top: 1rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        border: 1px solid #e0e0e0;
-    }
-    
-    section[data-testid="stSidebar"] {
-        background-color: #f8f9fa;
-        background-image: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
-    }
-    
-    /* Boutons */
-    div.stButton > button:first-child {
-        background-color: #FFD700 !important;
-        color: black !important;
-        border-radius: 8px !important;
-        border: none !important;
-        font-weight: bold !important;
-        padding: 8px 20px !important;
-        transition: all 0.3s ease !important;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
-    }
-    
-    div.stButton > button:first-child:hover {
-        background-color: #90EE90 !important;
-        color: black !important;
-        transform: translateY(-2px) !important;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
-    }
-    
-    /* Autres éléments de style */
-    .stFileUploader > div {
-        background-color: white;
-        border: 2px dashed #dee2e6;
-        border-radius: 8px;
-        padding: 20px;
-    }
-    
-    .stDataFrame {
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-    }
-    
-    </style>
-    """, unsafe_allow_html=True)
-
-
-
-
-
-
-
-st.markdown("""
-<style>
-/* Masquer le lien GitHub dans l’en-tête */
-header [data-testid="stToolbar"] a[href*="github.com"] {
-    display: none !important;
-    visibility: hidden !important;
-}
-
-/* Fallback : masque tout lien dans la toolbar si nécessaire */
-/* 
-header [data-testid="stToolbar"] a {
-    display: none !important;
-    visibility: hidden !important;
-}
-*/
-</style>
-""", unsafe_allow_html=True)
-
-
 
 # ✅ VÉRIFICATION SIMPLIFIÉE
 if 'user' not in st.session_state:
@@ -254,10 +48,8 @@ def section_telechargement_manuel():
         "le nettoyage de données avancé et l'exportation de vos résultats."
     )
 
-    # Style du bouton (doré + hover vert→doré)
     st.markdown("""
     <style>
-    /* Cible le bouton de téléchargement */
     .stDownloadButton button {
         background: linear-gradient(135deg, #FFD700 0%, #E6C200 100%) !important;
         color: black !important;
@@ -280,7 +72,6 @@ def section_telechargement_manuel():
     </style>
     """, unsafe_allow_html=True)
 
-    # Bouton de téléchargement
     try:
         with open("assets/Manuel_Visualisation_Universelle.pdf", "rb") as pdf_file:
             pdf_data = pdf_file.read()
@@ -296,8 +87,6 @@ def section_telechargement_manuel():
         st.error("❌ Le fichier du manuel n'est pas disponible.")
         st.info("💡 Assurez-vous que le dossier 'assets' contient le fichier 'Manuel_Visualisation_Universelle.pdf'")
 
-    
-
 def main():
     st.set_page_config(
         page_title="Visualisation Universelle",
@@ -305,10 +94,6 @@ def main():
         initial_sidebar_state="expanded"
     )
     
-    # ✅ APPELER LA FONCTION POUR MASQUER GITHUB
-    hide_streamlit_elements()
-    
-    # Vérification authentification
     if 'user' not in st.session_state:
         st.markdown("""
         <div style='background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
@@ -320,10 +105,6 @@ def main():
         """, unsafe_allow_html=True)
         st.stop()
 
-
-    
-    
-    
     st.markdown("""
     <style>
     .main {
@@ -341,27 +122,6 @@ def main():
     section[data-testid="stSidebar"] {
         background-color: #f8f9fa;
         background-image: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
-    }
-    .css-10trblm {
-        color: #2c3e50;
-    }
-    .stRadio > div {
-        background-color: white;
-        padding: 10px;
-        border-radius: 8px;
-        border: 1px solid #e0e0e0;
-    }
-    .stTabs [data-baseweb="tab-list"] {
-        background-color: #f8f9fa;
-        gap: 2px;
-    }
-    .stTabs [data-baseweb="tab"] {
-        background-color: #e9ecef;
-        border-radius: 4px 4px 0px 0px;
-        padding: 10px 20px;
-    }
-    .stTabs [aria-selected="true"] {
-        background-color: white;
     }
     div.stButton > button:first-child {
         background-color: #FFD700 !important;
@@ -387,24 +147,6 @@ def main():
     }
     .stDataFrame {
         border: 1px solid #e0e0e0;
-        border-radius: 8px;
-    }
-    .css-18e3th9 {
-        color: #000000;
-    }
-    .stInfo {
-        background-color: #e8f4fd;
-        border: 1px solid #bee5eb;
-        border-radius: 8px;
-    }
-    .stSuccess {
-        background-color: #d4edda;
-        border: 1px solid #c3e6cb;
-        border-radius: 8px;
-    }
-    .stError {
-        background-color: #f8d7da;
-        border: 1px solid #f5c6cb;
         border-radius: 8px;
     }
     </style>
@@ -897,6 +639,7 @@ def main():
                 st.dataframe(df.head())
                 from modules.plots import treemap
                 treemap.run(df)
+
             else:
                 st.info("Veuillez importer un CSV avec une structure hiérarchique (ex: Continent > Pays > Ville > Population)")
 
