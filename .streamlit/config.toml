@@ -1,9 +1,6 @@
 [ui]
-hideTopBar = true
-
-[client]
-showSidebarNavigation = false
-toolbarMode = "minimal"
+hideTopBar = false
+showSidebarNavigation = true
 
 [browser]
 gatherUsageStats = false

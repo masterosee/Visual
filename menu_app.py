@@ -10,6 +10,19 @@ from utils import cleaning
 from modules.plots.time_series import plot_time_series, plot_time_series_multi
 
 # ✅ VÉRIFICATION SIMPLIFIÉE
+
+import streamlit as st
+
+st.set_page_config(
+    page_title="Votre App",
+    layout="wide",
+    initial_sidebar_state="expanded",
+    menu_items={
+        'Get Help': None,
+        'Report a bug': None,
+        'About': None
+    }
+)
 if 'user' not in st.session_state:
     st.markdown("""
     <div style='background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); 
@@ -98,13 +111,7 @@ def main():
         initial_sidebar_state="expanded"
     )
     
-    st.markdown("""
-    <style>
-        footer {display: none !important;}
-        [data-testid="stDecoration"] {display: none !important;}
-        .viewerBadge_container__1QSob {display: none !important;}
-    </style>
-""", unsafe_allow_html=True)
+
     
     if 'user' not in st.session_state:
         st.markdown("""
