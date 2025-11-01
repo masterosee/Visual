@@ -1,8 +1,2 @@
-[ui]
-hideTopBar = false
-showSidebarNavigation = true
-
 [browser]
 gatherUsageStats = false
-
-

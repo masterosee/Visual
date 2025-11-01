@@ -9,12 +9,25 @@ import plotly.express as px
 from utils import cleaning
 from modules.plots.time_series import plot_time_series, plot_time_series_multi
 
-# ✅ VÉRIFICATION SIMPLIFIÉE
+# CSS RENFORCÉ pour cacher les menus
+st.markdown("""
+<style>
+/* Cache le menu hamburger */
+#MainMenu {display: none !important;}
 
-import streamlit as st
+/* Cache le footer "Manage app" */
+footer {display: none !important;}
+
+/* Cache le header de Streamlit */
+header {display: none !important;}
+
+/* Optionnel : cache le décorateur en bas à droite */
+.decorator {display: none !important;}
+</style>
+""", unsafe_allow_html=True)
 
 st.set_page_config(
-    page_title="Votre App",
+    page_title="Visual Universelle",
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
@@ -23,6 +36,12 @@ st.set_page_config(
         'About': None
     }
 )
+
+# ✅ VÉRIFICATION SIMPLIFIÉE
+
+
+
+
 if 'user' not in st.session_state:
     st.markdown("""
     <div style='background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); 
